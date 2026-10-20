@@ -1,0 +1,6 @@
+Taruh foto kalian di sini dengan nama 1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg, 6.jpg.
+
+- Kalau file-nya ada, otomatis dipakai dan dipotong rapi mengikuti bentuk bunga.
+- Kalau belum ada, yang tampil foto suasana (butuh internet).
+- Foto tegak (4:5) paling cocok. Ukuran sekitar 1000 x 1250 sudah cukup.
+- Mau jumlah atau keterangan foto lain? Ubah di src/config.ts (daftar SHOTS).

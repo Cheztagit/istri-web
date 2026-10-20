@@ -1,0 +1,1085 @@
+/* ---------- stiker ---------- */
+.stk { position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; line-height: 0; touch-action: manipulation; }
+.stk img { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+.stk:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; border-radius: 16px; }
+.stk-h { position: absolute; left: 50%; top: 8%; font-size: 18px; color: var(--rose); pointer-events: none; animation: hup 0.9s ease-out forwards; }
+@keyframes hup { from { opacity: 1; transform: translate(-50%, 0) scale(0.6); } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), -76px) scale(1.25); } }
+
+/* ---------- efek pencet ---------- */
+.burst { position: fixed; inset: 0; z-index: 200; pointer-events: none; overflow: hidden; }
+.bb { position: absolute; font-size: 18px; color: var(--rose); animation: bb 0.8s ease-out forwards; }
+.bb:nth-child(2n) { color: var(--accent); }
+@keyframes bb { from { opacity: 1; transform: translate(-50%, -50%) scale(0.4); } to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scale(1.1); } }
+
+/* ---------- pembuka baru: intro overlay ---------- */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: var(--bg);
+  overflow: hidden;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.intro-overlay.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-petal {
+  position: absolute;
+  top: 0;
+  display: block;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.intro-center {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+  pointer-events: none;
+}
+.intro-center .stk { pointer-events: auto; }
+
+.intro-text {
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.intro-skip-btn {
+  position: absolute;
+  z-index: 10;
+  top: calc(16px + env(safe-area-inset-top));
+  right: 16px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.intro-tap-btn {
+  margin-top: 14px;
+  padding: 12px 28px;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  border-radius: 99px;
+  gap: 8px;
+}
+.intro-hint {
+  font-family: var(--head);
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* ---------- foto jatuh (intro) ---------- */
+.intro-photo-container {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.intro-polaroid {
+  width: min(72vw, 340px);
+  background: var(--paper);
+  padding: 12px 12px 44px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transform-origin: center center;
+}
+
+.intro-photo-mask {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg2);
+  -webkit-mask: var(--flower) center / contain no-repeat;
+  mask: var(--flower) center / contain no-repeat;
+}
+
+.intro-photo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.intro-photo-caption {
+  margin-top: 10px;
+  text-align: center;
+  font-family: var(--body);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--muted);
+  letter-spacing: -0.01em;
+}
+
+/* ---------- lintasan beruang lari ---------- */
+.runlane { position: relative; height: 92px; overflow: hidden; pointer-events: none; }
+.runlane.tall { max-width: 720px; margin: 24px auto 0; }
+.runlane.tall + .resi.tall { margin-top: 0; }
+.runlane .stk { position: absolute; bottom: 0; left: 6px; pointer-events: auto; }
+.runlane .stk.go { animation: runx 8s linear infinite; }
+@keyframes runx { from { left: -100px; } to { left: 100%; } }
+.runner { position: absolute; left: calc(50% - 50vw); z-index: 25; pointer-events: none; line-height: 0; }
+
+/* ---------- penempatan stiker ---------- */
+.envpals { display: flex; justify-content: space-between; align-items: flex-end; width: min(360px, 88vw); min-height: 110px; }
+.markwrap { position: relative; }
+.markwrap .stk { position: absolute; right: 6%; bottom: 100%; }
+
+/* ---------- kartu ---------- */
+.deck { position: relative; margin-top: 18px; }
+.deck-pal { position: absolute; top: 0; z-index: 1; }
+.deck-pal.l { left: 0; }
+.deck-pal.r { right: 0; }
+.pcard { position: absolute; left: 50%; top: 82px; padding: 0; border: 0; background: none; cursor: pointer; touch-action: manipulation; }
+.pcard:disabled { cursor: default; }
+.flip { position: relative; width: 100%; height: 100%; }
+.face { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; border-radius: 16px; }
+
+.face.back { align-items: center; justify-content: center; background: var(--rose); box-shadow: 0 5px 0 #7a2335; }
+.face.back::before {
+  content: ''; position: absolute; inset: 9px; border-radius: 9px; border: 2px solid rgb(255 250 240 / 0.7);
+  background:
+    repeating-linear-gradient(45deg, rgb(255 250 240 / 0.09) 0 2px, transparent 2px 12px),
+    repeating-linear-gradient(-45deg, rgb(255 250 240 / 0.09) 0 2px, transparent 2px 12px);
+}
+.badge { position: relative; display: grid; place-items: center; width: 52%; aspect-ratio: 1; border-radius: 50%; background: var(--paper); color: var(--rose); box-shadow: 0 0 0 5px var(--rose), 0 0 0 7px rgb(255 250 240 / 0.7); }
+.badge svg { font-size: calc(var(--cw) * 0.3); }
+.cr { position: absolute; color: rgb(255 250 240 / 0.9); font-size: calc(var(--cw) * 0.1); line-height: 0; }
+.cr.tl { top: 17px; left: 17px; }
+.cr.tr { top: 17px; right: 17px; }
+.cr.bl { bottom: 17px; left: 17px; }
+.cr.br { bottom: 17px; right: 17px; }
+
+.face.front { padding: 20px 18px 18px; background: var(--paper); color: var(--ink); text-align: left; box-shadow: 0 5px 0 #cdb892; outline: 2px solid var(--rose); outline-offset: -8px; }
+.ftop { display: flex; justify-content: space-between; align-items: center; font-family: var(--head); font-weight: 700; font-size: calc(var(--cw) * 0.075); color: var(--rose); }
+.face.front b { margin: auto 0; font-family: var(--head); font-weight: 900; letter-spacing: -0.035em; line-height: 0.98; text-wrap: balance; }
+.fwhere { align-self: flex-start; padding: 2px 10px; border-radius: 99px; background: var(--bg2); font-family: var(--head); font-weight: 700; font-size: calc(var(--cw) * 0.08); }
+.hearts { display: inline-flex; gap: 3px; }
+.hearts svg { font-size: 15px; color: var(--rose); opacity: 0.35; }
+.hearts svg.on { opacity: 1; }
+
+.chosen { position: relative; margin-top: 34px; padding: 26px 22px 28px; background: var(--paper); color: var(--ink); }
+.chosen .lvl { display: flex; align-items: center; gap: 10px; font-family: var(--head); font-weight: 700; font-size: 16px; color: var(--rose); }
+.chosen h2 { margin-top: 10px; font-size: clamp(32px, 7vw, 52px); }
+.chosen .desc { margin-top: 12px; font-size: 20px; max-width: 34ch; }
+.chosen .meta { margin-top: 14px; font-size: 16px; color: var(--muted); }
+.react { position: absolute; z-index: 3; right: 14px; top: -74px; display: flex; align-items: flex-end; gap: 6px; }
+.bubble { margin-bottom: 36px; padding: 5px 13px; border-radius: 99px; background: var(--rose); color: var(--paper); font-family: var(--head); font-weight: 700; font-size: 14px; white-space: nowrap; }
+.deckinfo { margin: 22px auto 0; max-width: 46ch; text-align: center; font-size: 15px; color: color-mix(in srgb, var(--paper) 72%, transparent); }
+@media (min-width: 768px) { .chosen { padding: 34px 32px 36px; } .react { top: -86px; right: 24px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .runlane .stk.go, .stk-h, .bb { animation: none !important; }
+  .intro-overlay { transition-duration: 0.01ms !important; }
+}
+
+/* ---------- penempatan stiker (amplop) ---------- */
+.envpals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 16px auto 0;
+}
+.env-perch {
+  position: absolute;
+  z-index: 6;
+  right: -8px;
+  top: -54px;
+  transform: rotate(8deg);
+  pointer-events: auto;
+}
+.env-peek {
+  position: absolute;
+  z-index: 6;
+  left: -12px;
+  bottom: -22px;
+  transform: rotate(-9deg);
+  pointer-events: auto;
+}
+.tile-stk { position: absolute; right: 6px; top: -30px; transform: rotate(7deg); }
+.paperfold { background-image: repeating-linear-gradient(transparent 0 31px, color-mix(in srgb, var(--rose) 18%, transparent) 31px 32px); background-position: 0 14px; }
+
+/* ---------- hero action buttons & cute bear sticker ---------- */
+.hero-actions-wrap {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.hero-cute-bear {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12));
+  transition: transform 0.2s ease;
+}
+.hero-cute-bear:hover {
+  transform: rotate(4deg) scale(1.1);
+}
+
+/* ---------- pemutar lagu simpel (Our Special Song) ---------- */
+.music-container {
+  position: fixed;
+  top: calc(66px + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  z-index: 45;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--gutter);
+  pointer-events: none;
+}
+
+.music-special-pill {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 99px;
+  box-shadow: 0 4px 0 var(--ink);
+  padding: 5px 16px 5px 8px;
+  cursor: pointer;
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  transition: transform 0.12s, box-shadow 0.12s, background-color 0.15s;
+}
+
+.music-special-pill:hover {
+  background: var(--bg2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--ink);
+}
+
+.music-special-pill:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--ink);
+}
+
+.pill-flower {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg2);
+  color: var(--rose);
+  border: 1.5px solid var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.pill-flower.spinning {
+  animation: spin 6s linear infinite;
+}
+
+.pill-text {
+  white-space: nowrap;
+}
+
+.pill-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+  padding-left: 2px;
+}
+
+.pill-bars i {
+  width: 2.5px;
+  height: 100%;
+  background: var(--rose);
+  border-radius: 1px;
+  transform-origin: bottom;
+}
+
+.pill-bars.active i {
+  animation: barBounce 0.8s ease-in-out infinite alternate;
+}
+.pill-bars.active i:nth-child(1) { animation-delay: 0.1s; height: 40%; }
+.pill-bars.active i:nth-child(2) { animation-delay: 0.3s; height: 100%; }
+.pill-bars.active i:nth-child(3) { animation-delay: 0.5s; height: 60%; }
+
+.pill-bars:not(.active) i {
+  height: 4px;
+  opacity: 0.4;
+}
+
+@keyframes barBounce {
+  0% { transform: scaleY(0.25); }
+  100% { transform: scaleY(1); }
+}
+
+@media (max-width: 680px) {
+  .music-container {
+    top: calc(62px + env(safe-area-inset-top));
+  }
+  .music-special-pill {
+    padding: 4px 14px 4px 7px;
+    font-size: 13px;
+  }
+  .pill-flower {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+}
+
+/* ---------- 1. Menu Cepat: 3 Kartu Berstiker (DashExtras) ---------- */
+.quick-tiles-sec {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 24px;
+}
+.quick-tiles-grid {
+  display: grid;
+  gap: 36px;
+  padding-top: 40px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .quick-tiles-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.quick-tile {
+  position: relative;
+  display: block;
+  overflow: visible;
+  border-radius: 28px 6px 28px 6px;
+  padding: 24px 24px 32px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+.quick-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+.quick-tile:active {
+  transform: scale(0.98);
+}
+.quick-tile.tile-rose {
+  background: var(--rose);
+  color: var(--paper);
+}
+.quick-tile.tile-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+.quick-tile.tile-soft {
+  background: var(--soft);
+  color: var(--ink);
+}
+.quick-tile-title {
+  position: relative;
+  display: block;
+  font-family: var(--head);
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.quick-tile-sub {
+  position: relative;
+  display: block;
+  margin-top: 4px;
+  font-size: 16px;
+  opacity: 0.88;
+}
+.quick-tile-flower {
+  position: absolute;
+  bottom: -24px;
+  left: -20px;
+  width: 80px;
+  height: 80px;
+  opacity: 0.2;
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.quick-tile:hover .quick-tile-flower {
+  transform: rotate(90deg);
+}
+
+/* ---------- 2. Hitung Mundur Paket Sampai 22 Oktober ---------- */
+.countdown-section {
+  background: var(--night);
+  color: var(--paper);
+  padding: 64px var(--gutter);
+  margin-top: 20px;
+}
+@media (min-width: 768px) {
+  .countdown-section {
+    padding: 88px var(--gutter);
+  }
+}
+.countdown-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .countdown-container {
+    grid-template-columns: 1fr 1.3fr;
+  }
+}
+.countdown-header h2 {
+  color: var(--paper) !important;
+  font-family: var(--head);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.countdown-header p {
+  margin-top: 16px;
+  max-width: 32ch;
+  font-size: 18px;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+.countdown-blocks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (min-width: 640px) {
+  .countdown-blocks {
+    gap: 16px;
+  }
+}
+.countdown-pennant {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  aspect-ratio: 3 / 4;
+  clip-path: polygon(50% 0, 100% 18%, 100% 100%, 0 100%, 0 18%);
+  -webkit-clip-path: polygon(50% 0, 100% 18%, 100% 100%, 0 100%, 0 18%);
+  padding-top: 16px;
+  cursor: default;
+  transition: transform 0.15s ease;
+}
+.countdown-pennant.rose {
+  background: var(--rose);
+  color: var(--paper);
+}
+.countdown-pennant.paper {
+  background: var(--paper);
+  color: var(--ink);
+}
+.countdown-pennant-num {
+  font-family: var(--head);
+  font-size: clamp(28px, 6vw, 56px);
+  font-weight: 900;
+  line-height: 1;
+  font-feature-settings: "tnum";
+}
+.countdown-pennant-lbl {
+  margin-top: 4px;
+  font-family: var(--head);
+  font-size: clamp(10px, 1.8vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.75;
+}
+
+/* ---------- 3. Game Kupon Tiket Manja ---------- */
+.coupons-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 64px var(--gutter);
+}
+@media (min-width: 768px) {
+  .coupons-section {
+    padding: 88px var(--gutter);
+  }
+}
+.coupons-header h2 {
+  margin-bottom: 8px;
+  font-family: var(--head);
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 900;
+}
+.coupons-header p {
+  margin-bottom: 32px;
+  font-size: 18px;
+  color: var(--muted);
+}
+.coupons-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .coupons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .coupons-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.ticket-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border: 2px dashed var(--rose);
+  padding: 20px 24px 20px 28px;
+  text-align: left;
+  background: var(--paper);
+  clip-path: polygon(0 0, 100% 0, 100% 38%, calc(100% - 10px) 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 10px 50%, 0 38%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 38%, calc(100% - 10px) 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 10px 50%, 0 38%);
+  transition: transform 0.15s ease, background-color 0.15s ease, opacity 0.2s ease;
+}
+.ticket-card:hover {
+  transform: rotate(-1deg) translateY(-2px);
+}
+.ticket-card:active {
+  transform: scale(0.97);
+}
+.ticket-card.claimed {
+  background: var(--bg2);
+  opacity: 0.72;
+}
+.ticket-title {
+  display: block;
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--rose);
+}
+.ticket-desc {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.ticket-stamp {
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  transform: rotate(-12deg);
+  border: 3px solid var(--rose);
+  color: var(--rose);
+  padding: 2px 10px;
+  font-family: var(--head);
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  background: var(--paper);
+}
+
+/* ---------- 3D Flip Pop-up Surat (Surat Muter) ---------- */
+.letter-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: grid;
+  place-items: center;
+  background: rgba(42, 25, 18, 0.82);
+  backdrop-filter: blur(8px);
+  padding: 16px;
+  padding-bottom: 24px;
+}
+.letter-card-perspective {
+  position: relative;
+  width: min(92vw, 440px);
+  height: min(78svh, 580px);
+  perspective: 1400px;
+}
+.letter-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transition: transform 0.75s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.letter-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+.letter-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px 8px 24px 8px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 5px 0 rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.letter-card-front {
+  background: var(--paper);
+  color: var(--ink);
+  outline: 2.5px solid var(--rose);
+  outline-offset: -10px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  gap: 12px;
+}
+.letter-card-front .letter-front-gif {
+  margin-bottom: 4px;
+  filter: drop-shadow(0 6px 12px rgba(178, 58, 82, 0.15));
+}
+.letter-love-title {
+  font-family: var(--head);
+  font-weight: 900;
+  font-size: clamp(26px, 6vw, 36px);
+  color: var(--rose);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 6px 0 0;
+  text-transform: lowercase;
+}
+.letter-love-title::first-letter {
+  text-transform: uppercase;
+}
+.letter-love-sub {
+  font-family: var(--head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.letter-tap-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 16px;
+  background: var(--bg2);
+  border-radius: 99px;
+  font-family: var(--head);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: 0 2px 0 var(--line);
+}
+.letter-card-back {
+  background: var(--paper);
+  color: var(--ink);
+  transform: rotateY(180deg);
+  outline: 2.5px solid var(--accent);
+  outline-offset: -10px;
+  background-image: repeating-linear-gradient(transparent 0 31px, color-mix(in srgb, var(--rose) 14%, transparent) 31px 32px);
+  background-position: 0 16px;
+}
+.letter-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 28px 26px 80px;
+}
+.letter-scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+.letter-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--soft);
+  border-radius: 99px;
+}
+.letter-back-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed var(--line);
+}
+.letter-back-header h3 {
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--rose);
+  letter-spacing: -0.02em;
+}
+.letter-para {
+  margin-bottom: 16px;
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--ink);
+  padding-left: 12px;
+  border-left: 3px solid var(--rose-hi);
+}
+.letter-sign {
+  margin-top: 24px;
+  text-align: right;
+  font-family: var(--body);
+  font-weight: 600;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--rose);
+}
+.letter-flip-pill {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--rose);
+  color: var(--paper);
+  border: 0;
+  border-radius: 99px;
+  padding: 10px 24px;
+  font-family: var(--head);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 5px 0 #7a2335, 0 8px 16px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s, box-shadow 0.12s, background-color 0.15s;
+}
+.letter-flip-pill:hover {
+  background: #c3455f;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 7px 0 #7a2335, 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+.letter-flip-pill:active {
+  transform: translateX(-50%) translateY(2px);
+  box-shadow: 0 2px 0 #7a2335;
+}
+.letter-close-btn {
+  position: absolute;
+  top: -14px;
+  right: -12px;
+  z-index: 25;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--paper);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.15s, background-color 0.15s;
+}
+.letter-close-btn:hover {
+  background: var(--rose);
+  transform: scale(1.1) rotate(90deg);
+}
+
+/* ---------- 1. Fitur Tracking: Kurir Booster & Manifest ---------- */
+.courier-boost-wrap {
+  margin: 20px auto 16px;
+  text-align: center;
+  max-width: 520px;
+}
+.courier-quote-bubble {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--accent);
+  border-radius: 18px;
+  padding: 12px 20px;
+  margin: 0 auto 16px;
+  max-width: 440px;
+  font-family: var(--head);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.courier-quote-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+  rotate: 45deg;
+}
+.boost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--rose);
+  color: var(--paper);
+  border: 0;
+  border-radius: 99px;
+  padding: 10px 24px;
+  font-family: var(--head);
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #7a2335;
+  transition: transform 0.12s, box-shadow 0.12s, background-color 0.15s;
+}
+.boost-btn:hover {
+  background: #c3455f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #7a2335;
+}
+.boost-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #7a2335;
+}
+.manifest-card {
+  margin: 32px auto 0;
+  max-width: 720px;
+  background: var(--paper);
+  border: 2px dashed var(--accent);
+  border-radius: 20px;
+  padding: 24px 26px;
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.manifest-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  font-family: var(--head);
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--accent);
+}
+.manifest-badge {
+  background: var(--bg2);
+  color: var(--rose);
+  padding: 3px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+}
+.manifest-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 600px) {
+  .manifest-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.manifest-item small {
+  display: block;
+  font-family: var(--head);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.manifest-item b {
+  font-family: var(--head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 2px;
+  display: block;
+}
+
+/* ---------- 2. Fitur Kartu: Misi Kita Malam Ini ---------- */
+.quests-tray {
+  margin-top: 36px;
+  padding: 28px 24px;
+  background: var(--night);
+  border-radius: 20px;
+  border: 2px solid var(--line);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.quests-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 250, 240, 0.15);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+.quests-header h3 {
+  font-family: var(--head);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quests-count {
+  background: var(--rose);
+  color: var(--paper);
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.quests-list {
+  display: grid;
+  gap: 12px;
+}
+.quest-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 250, 240, 0.07);
+  border: 1px solid rgba(255, 250, 240, 0.12);
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.quest-item.done {
+  background: rgba(178, 58, 82, 0.18);
+  border-color: var(--rose);
+}
+.quest-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  flex: 1;
+}
+.quest-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid var(--soft);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--paper);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.quest-item.done .quest-checkbox {
+  background: var(--rose);
+  border-color: var(--rose);
+}
+.quest-text b {
+  font-family: var(--head);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--paper);
+  display: block;
+}
+.quest-item.done .quest-text b {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.quest-text span {
+  font-size: 13px;
+  color: color-mix(in srgb, var(--paper) 75%, transparent);
+}
+.quest-del-btn {
+  background: transparent;
+  border: 0;
+  color: color-mix(in srgb, var(--paper) 50%, transparent);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+.quest-del-btn:hover {
+  color: var(--rose-hi);
+}
+
+/* ---------- 3. Fitur Surat: Reaksi Cepat Kak Nadya ---------- */
+.reaction-bar-wrap {
+  margin-top: 32px;
+  padding: 24px 20px;
+  background: var(--paper);
+  border-radius: 18px;
+  border: 2px dashed var(--rose);
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.reaction-bar-title {
+  font-family: var(--head);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--rose);
+  margin-bottom: 4px;
+}
+.reaction-bar-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.reaction-pills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg2);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-family: var(--head);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--line);
+  transition: transform 0.12s, background-color 0.15s, box-shadow 0.12s;
+}
+.reaction-pill:hover {
+  background: var(--soft);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 0 var(--line);
+}
+.reaction-pill:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--line);
+}
+.reaction-pill.selected {
+  background: var(--rose);
+  color: var(--paper);
+  border-color: var(--rose);
+  box-shadow: 0 3px 0 #7a2335;
+}
+.reaction-feedback {
+  margin-top: 14px;
+  padding: 8px 16px;
+  background: rgba(178, 58, 82, 0.1);
+  border-radius: 99px;
+  font-family: var(--head);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--rose);
+  display: inline-block;
+}
